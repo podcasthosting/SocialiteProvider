@@ -20,7 +20,7 @@ class Provider extends AbstractProvider
     /**
      * {@inheritdoc}
      */
-    protected $scopes = ['basic'];
+    protected $scopes = ['*'];
 
     /**
      * {@inheritdoc}
@@ -35,7 +35,7 @@ class Provider extends AbstractProvider
      */
     protected function getTokenUrl()
     {
-        return 'https://www.podcaster.de/oauth/tokens';
+        return 'https://www.podcaster.de/oauth/token';
     }
 
     /**
@@ -57,11 +57,13 @@ class Provider extends AbstractProvider
      */
     protected function mapUserToObject(array $user)
     {
-        return (new User())->setRaw($user)->map([
-            'id'       => $user['id'],
-            'nickname' => $user['username'],
-            'name'     => $user['name'],
-            'email'    => $user['email'],
+        $u = $user['data']['attributes'];
+
+        return (new User())->setRaw($u)->map([
+            'id'       => $u['id'],
+            'nickname' => $u['username'],
+            'name'     => $u['name'],
+            'email'    => $u['email'],
             //'avatar'   => $user['avatar'],
         ]);
     }
