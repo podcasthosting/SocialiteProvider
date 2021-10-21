@@ -17,6 +17,8 @@ class Provider extends AbstractProvider
      */
     const IDENTIFIER = 'PODCASTER';
 
+    const BASE_URL = 'https://www.podcaster.de';
+
     /**
      * {@inheritdoc}
      */
@@ -27,7 +29,7 @@ class Provider extends AbstractProvider
      */
     protected function getAuthUrl($state)
     {
-        return $this->buildAuthUrlFromBase('https://www.podcaster.de/oauth/authorize', $state);
+        return $this->buildAuthUrlFromBase( self::BASE_URL . '/oauth/authorize', $state);
     }
 
     /**
@@ -35,7 +37,7 @@ class Provider extends AbstractProvider
      */
     protected function getTokenUrl()
     {
-        return 'https://www.podcaster.de/oauth/token';
+        return self::BASE_URL . '/oauth/token';
     }
 
     /**
@@ -43,7 +45,7 @@ class Provider extends AbstractProvider
      */
     protected function getUserByToken($token)
     {
-        $response = $this->getHttpClient()->get('https://www.podcaster.de/api/user', [
+        $response = $this->getHttpClient()->get( self::BASE_URL . '/api/user', [
             'headers' => [
                 'Authorization' => 'Bearer '.$token,
             ],
