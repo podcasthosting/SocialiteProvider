@@ -14,7 +14,7 @@
   },
   "autoload": {
     "psr-4": {
-      "podcasthosting\\socialiteprovider\\": ""
+      "podcasthosting\\socialiteprovider\\": "src"
     }
   }
 }

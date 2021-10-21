@@ -5,7 +5,7 @@
  * Time: 09:29
  */
 
-namespace podcasthosting\socialiteprovider;
+namespace podcasthosting\Socialiteprovider;
 
 use SocialiteProviders\Manager\SocialiteWasCalled;
 
