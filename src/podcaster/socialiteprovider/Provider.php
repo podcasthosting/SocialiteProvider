@@ -5,7 +5,7 @@
  * Time: 09:37
  */
 
-namespace podcasthosting\Socialiteprovider;
+namespace podcasthosting\podcaster\socialiteprovider;
 
 use SocialiteProviders\Manager\OAuth2\AbstractProvider;
 use SocialiteProviders\Manager\OAuth2\User;
