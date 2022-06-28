@@ -7,10 +7,11 @@
 
 namespace podcasthosting\podcaster\socialiteprovider;
 
+use SocialiteProviders\Manager\Contracts\OAuth2\ProviderInterface;
 use SocialiteProviders\Manager\OAuth2\AbstractProvider;
 use SocialiteProviders\Manager\OAuth2\User;
 
-class Provider extends AbstractProvider
+class Provider extends AbstractProvider implements ProviderInterface
 {
     /**
      * Unique Provider Identifier.
