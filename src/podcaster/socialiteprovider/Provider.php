@@ -23,7 +23,7 @@ class Provider extends AbstractProvider implements ProviderInterface
     /**
      * {@inheritdoc}
      */
-    protected $scopes = ['*'];
+    protected $scopes = ['read-only-user'];
 
     /**
      * {@inheritdoc}
@@ -46,11 +46,10 @@ class Provider extends AbstractProvider implements ProviderInterface
      */
     protected function getUserByToken($token)
     {
-        $response = $this->getHttpClient()->get( self::BASE_URL . '/api/user', [
-            'headers' => [
-                'Authorization' => 'Bearer '.$token,
-            ],
-        ]);
+        $response = $this->getHttpClient()->get(
+            self::BASE_URL . '/api/user',
+            $this->getRequestOptions($token)
+        );
 
         return json_decode($response->getBody(), true);
     }
@@ -79,5 +78,20 @@ class Provider extends AbstractProvider implements ProviderInterface
         return array_merge(parent::getTokenFields($code), [
             'grant_type' => 'authorization_code'
         ]);
+    }
+
+    /**
+     * Get the default options for an HTTP request.
+     *
+     * @param  string  $token
+     * @return array
+     */
+    protected function getRequestOptions($token)
+    {
+        return [
+            'headers' => [
+                'Authorization' => 'Bearer '.$token,
+            ],
+        ];
     }
 }
