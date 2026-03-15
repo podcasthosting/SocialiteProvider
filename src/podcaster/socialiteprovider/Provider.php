@@ -1,63 +1,45 @@
 <?php
-/**
- * User: Fabio Bacigalupo
- * Date: 18.06.19
- * Time: 09:37
- */
+
+declare(strict_types=1);
 
 namespace podcasthosting\podcaster\socialiteprovider;
 
-use SocialiteProviders\Manager\Contracts\OAuth2\ProviderInterface;
 use SocialiteProviders\Manager\OAuth2\AbstractProvider;
 use SocialiteProviders\Manager\OAuth2\User;
 
-class Provider extends AbstractProvider implements ProviderInterface
+class Provider extends AbstractProvider
 {
-    /**
-     * Unique Provider Identifier.
-     */
-    const IDENTIFIER = 'PODCASTER';
+    public const IDENTIFIER = 'PODCASTER';
 
-    const BASE_URL = 'https://www.podcaster.de';
+    public const BASE_URL = 'https://www.podcaster.de';
 
-    /**
-     * {@inheritdoc}
-     */
     protected $scopes = ['read-only-user'];
 
-    /**
-     * {@inheritdoc}
-     */
-    protected function getAuthUrl($state)
+    protected function getAuthUrl($state): string
     {
-        return $this->buildAuthUrlFromBase( self::BASE_URL . '/oauth/authorize', $state);
+        return $this->buildAuthUrlFromBase(self::BASE_URL . '/oauth/authorize', $state);
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    protected function getTokenUrl()
+    protected function getTokenUrl(): string
     {
         return self::BASE_URL . '/oauth/token';
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    protected function getUserByToken($token)
+    protected function getUserByToken($token): array
     {
         $response = $this->getHttpClient()->get(
             self::BASE_URL . '/api/user',
-            $this->getRequestOptions($token)
+            [
+                'headers' => [
+                    'Authorization' => 'Bearer ' . $token,
+                ],
+            ],
         );
 
-        return json_decode($response->getBody(), true);
+        return json_decode((string) $response->getBody(), true);
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    protected function mapUserToObject(array $user)
+    protected function mapUserToObject(array $user): User
     {
         $u = $user['data']['attributes'];
 
@@ -70,28 +52,10 @@ class Provider extends AbstractProvider implements ProviderInterface
         ]);
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    protected function getTokenFields($code)
+    protected function getTokenFields($code): array
     {
         return array_merge(parent::getTokenFields($code), [
-            'grant_type' => 'authorization_code'
+            'grant_type' => 'authorization_code',
         ]);
-    }
-
-    /**
-     * Get the default options for an HTTP request.
-     *
-     * @param  string  $token
-     * @return array
-     */
-    protected function getRequestOptions($token)
-    {
-        return [
-            'headers' => [
-                'Authorization' => 'Bearer '.$token,
-            ],
-        ];
     }
 }

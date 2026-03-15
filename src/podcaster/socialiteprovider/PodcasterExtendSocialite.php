@@ -1,9 +1,6 @@
 <?php
-/**
- * User: Fabio Bacigalupo
- * Date: 18.06.19
- * Time: 09:29
- */
+
+declare(strict_types=1);
 
 namespace podcasthosting\podcaster\socialiteprovider;
 
@@ -11,8 +8,8 @@ use SocialiteProviders\Manager\SocialiteWasCalled;
 
 class PodcasterExtendSocialite
 {
-    public function handle(SocialiteWasCalled $socialiteWasCalled)
+    public function handle(SocialiteWasCalled $socialiteWasCalled): void
     {
-        $socialiteWasCalled->extendSocialite('podcaster', __NAMESPACE__ . '\Provider');
+        $socialiteWasCalled->extendSocialite('podcaster', Provider::class);
     }
 }
