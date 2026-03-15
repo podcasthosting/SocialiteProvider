@@ -11,7 +11,7 @@ class Provider extends AbstractProvider
 {
     public const IDENTIFIER = 'PODCASTER';
 
-    public const BASE_URL = 'https://www.podcaster.de';
+    public const BASE_URL = 'https://app.podcaster.de';
 
     protected $scopes = ['read-only-user'];
 

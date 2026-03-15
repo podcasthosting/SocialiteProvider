@@ -45,7 +45,7 @@ class ProviderTest extends TestCase
     #[Test]
     public function base_url_points_to_podcaster(): void
     {
-        $this->assertSame('https://www.podcaster.de', Provider::BASE_URL);
+        $this->assertSame('https://app.podcaster.de', Provider::BASE_URL);
     }
 
     #[Test]
@@ -56,7 +56,7 @@ class ProviderTest extends TestCase
 
         $redirectUrl = $provider->redirect()->getTargetUrl();
 
-        $this->assertStringStartsWith('https://www.podcaster.de/oauth/authorize', $redirectUrl);
+        $this->assertStringStartsWith('https://app.podcaster.de/oauth/authorize', $redirectUrl);
         $this->assertStringContainsString('client_id=client-id', $redirectUrl);
         $this->assertStringContainsString('redirect_uri=' . urlencode('https://example.com/callback'), $redirectUrl);
         $this->assertStringContainsString('scope=read-only-user', $redirectUrl);
