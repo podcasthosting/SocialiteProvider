@@ -9,6 +9,8 @@ use GuzzleHttp\Handler\MockHandler;
 use GuzzleHttp\HandlerStack;
 use GuzzleHttp\Psr7\Response;
 use Illuminate\Http\Request;
+use Illuminate\Session\ArraySessionHandler;
+use Illuminate\Session\Store;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use PodcastHosting\Podcaster\SocialiteProvider\Provider;
@@ -19,6 +21,8 @@ class ProviderTest extends TestCase
     private function createProvider(?Client $httpClient = null): Provider
     {
         $request = Request::create('/', 'GET');
+        $request->setLaravelSession(new Store('podcaster_test', new ArraySessionHandler(60)));
+
         $provider = new Provider($request, 'client-id', 'client-secret', 'https://example.com/callback');
 
         if ($httpClient !== null) {
@@ -61,6 +65,35 @@ class ProviderTest extends TestCase
         $this->assertStringContainsString('redirect_uri=' . urlencode('https://example.com/callback'), $redirectUrl);
         $this->assertStringContainsString('scope=read-only-user', $redirectUrl);
         $this->assertStringContainsString('response_type=code', $redirectUrl);
+    }
+
+    #[Test]
+    public function auth_url_contains_pkce_parameters(): void
+    {
+        $provider = $this->createProvider();
+        $provider->stateless();
+
+        $redirectUrl = $provider->redirect()->getTargetUrl();
+
+        $this->assertStringContainsString('code_challenge=', $redirectUrl);
+        $this->assertStringContainsString('code_challenge_method=S256', $redirectUrl);
+    }
+
+    #[Test]
+    public function redirect_stores_code_verifier_in_session(): void
+    {
+        $request = Request::create('/', 'GET');
+        $session = new Store('podcaster_test', new ArraySessionHandler(60));
+        $request->setLaravelSession($session);
+
+        $provider = new Provider($request, 'client-id', 'client-secret', 'https://example.com/callback');
+        $provider->stateless();
+        $provider->redirect();
+
+        $verifier = $session->get('code_verifier');
+        $this->assertIsString($verifier);
+        $this->assertGreaterThanOrEqual(43, strlen($verifier));
+        $this->assertLessThanOrEqual(128, strlen($verifier));
     }
 
     #[Test]
@@ -153,5 +186,25 @@ class ProviderTest extends TestCase
         $this->assertSame('client-secret', $fields['client_secret']);
         $this->assertSame('test-code', $fields['code']);
         $this->assertSame('https://example.com/callback', $fields['redirect_uri']);
+    }
+
+    #[Test]
+    public function get_token_fields_includes_pkce_code_verifier(): void
+    {
+        $request = Request::create('/', 'GET');
+        $session = new Store('podcaster_test', new ArraySessionHandler(60));
+        $request->setLaravelSession($session);
+
+        $provider = new Provider($request, 'client-id', 'client-secret', 'https://example.com/callback');
+        $provider->stateless();
+        $provider->redirect();
+
+        $expectedVerifier = $session->get('code_verifier');
+
+        $reflection = new \ReflectionMethod($provider, 'getTokenFields');
+        $fields = $reflection->invoke($provider, 'test-code');
+
+        $this->assertArrayHasKey('code_verifier', $fields);
+        $this->assertSame($expectedVerifier, $fields['code_verifier']);
     }
 }

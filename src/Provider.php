@@ -15,6 +15,8 @@ class Provider extends AbstractProvider
 
     protected $scopes = ['read-only-user'];
 
+    protected $usesPKCE = true;
+
     protected function getAuthUrl($state): string
     {
         return $this->buildAuthUrlFromBase(self::BASE_URL . '/oauth/authorize', $state);

@@ -50,3 +50,9 @@ $user = Socialite::driver('podcaster')->user();
 ## Scopes
 
 The provider requests the `read-only-user` scope by default.
+
+## PKCE
+
+PKCE (RFC 7636) is **enabled by default** with `S256` as code challenge method. The provider stores the `code_verifier` in the Laravel session during `redirect()` and submits it automatically in the token exchange request. No additional configuration is required.
+
+If you need to disable PKCE for any reason, extend the provider and set `protected $usesPKCE = false;`.
