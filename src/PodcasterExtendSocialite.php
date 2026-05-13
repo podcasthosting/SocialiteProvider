@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace podcasthosting\podcaster\socialiteprovider;
+namespace PodcastHosting\Podcaster\SocialiteProvider;
 
 use SocialiteProviders\Manager\SocialiteWasCalled;
 
-class PodcasterExtendSocialite
+final class PodcasterExtendSocialite
 {
     public function handle(SocialiteWasCalled $socialiteWasCalled): void
     {

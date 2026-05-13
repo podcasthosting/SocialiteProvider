@@ -13,7 +13,12 @@
   },
   "autoload": {
     "psr-4": {
-      "podcasthosting\\": "src"
+      "PodcastHosting\\Podcaster\\SocialiteProvider\\": "src/"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "PodcastHosting\\Podcaster\\SocialiteProvider\\Tests\\": "tests/"
     }
   },
   "require-dev": {

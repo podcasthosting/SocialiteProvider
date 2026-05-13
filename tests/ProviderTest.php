@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace podcasthosting\podcaster\socialiteprovider\Tests;
+namespace PodcastHosting\Podcaster\SocialiteProvider\Tests;
 
 use GuzzleHttp\Client;
 use GuzzleHttp\Handler\MockHandler;
@@ -11,7 +11,7 @@ use GuzzleHttp\Psr7\Response;
 use Illuminate\Http\Request;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
-use podcasthosting\podcaster\socialiteprovider\Provider;
+use PodcastHosting\Podcaster\SocialiteProvider\Provider;
 use SocialiteProviders\Manager\OAuth2\User;
 
 class ProviderTest extends TestCase

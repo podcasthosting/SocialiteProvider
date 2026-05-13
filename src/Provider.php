@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace podcasthosting\podcaster\socialiteprovider;
+namespace PodcastHosting\Podcaster\SocialiteProvider;
 
 use SocialiteProviders\Manager\OAuth2\AbstractProvider;
 use SocialiteProviders\Manager\OAuth2\User;
@@ -32,23 +32,24 @@ class Provider extends AbstractProvider
             [
                 'headers' => [
                     'Authorization' => 'Bearer ' . $token,
+                    'Accept'        => 'application/json',
                 ],
             ],
         );
 
-        return json_decode((string) $response->getBody(), true);
+        return json_decode((string) $response->getBody(), true, 512, JSON_THROW_ON_ERROR);
     }
 
     protected function mapUserToObject(array $user): User
     {
-        $u = $user['data']['attributes'];
+        $attributes = $user['data']['attributes'] ?? [];
 
-        return (new User())->setRaw($u)->map([
-            'id'       => $u['id'],
-            'nickname' => $u['nickname'],
-            'name'     => $u['name'],
-            'email'    => $u['email'],
-            'avatar'   => $u['avatar'],
+        return (new User())->setRaw($attributes)->map([
+            'id'       => $attributes['id'] ?? null,
+            'nickname' => $attributes['nickname'] ?? null,
+            'name'     => $attributes['name'] ?? null,
+            'email'    => $attributes['email'] ?? null,
+            'avatar'   => $attributes['avatar'] ?? null,
         ]);
     }
 

@@ -1,31 +1,52 @@
-# SocialiteProvider
-Laravel Socialite Provider to log in to podcaster service ([www.podcaster.de](https://www.podcaster.de))
+# SocialiteProvider for podcaster
 
-Add this app/Providers/EventServiceProvider.php
+Laravel Socialite Provider for logging in via the podcaster service ([www.podcaster.de](https://www.podcaster.de)).
 
-    private function bootPodcasterSocialite()
-    {
-        $socialite = $this->app->make('Laravel\Socialite\Contracts\Factory');
-        $socialite->extend(
-            'podcaster',
-            function ($app) use ($socialite) {
-                $config = $app['config']['services.podcaster'];
-                return $socialite->buildProvider(\podcasthosting\podcaster\socialiteprovider\Provider::class, $config);
-            }
-        );
-    }
+## Requirements
 
-and call it from boot() method.
+- PHP `^8.3`
+- `socialiteproviders/manager` `^4.4`
 
+## Installation
 
-    /**
-     * Register any events for your application.
-     *
-     * @return void
-     */
-    public function boot()
-    {
-        $this->bootPodcasterSocialite();
+```bash
+composer require podcasthosting/socialiteprovider
+```
 
-        parent::boot();
-    }
+## Configuration
+
+### 1. Add credentials to `config/services.php`
+
+```php
+'podcaster' => [
+    'client_id'     => env('PODCASTER_CLIENT_ID'),
+    'client_secret' => env('PODCASTER_CLIENT_SECRET'),
+    'redirect'      => env('PODCASTER_REDIRECT_URI'),
+],
+```
+
+### 2. Register the event listener
+
+In `app/Providers/EventServiceProvider.php`:
+
+```php
+protected $listen = [
+    \SocialiteProviders\Manager\SocialiteWasCalled::class => [
+        \PodcastHosting\Podcaster\SocialiteProvider\PodcasterExtendSocialite::class,
+    ],
+];
+```
+
+## Usage
+
+```php
+return Socialite::driver('podcaster')->redirect();
+```
+
+```php
+$user = Socialite::driver('podcaster')->user();
+```
+
+## Scopes
+
+The provider requests the `read-only-user` scope by default.

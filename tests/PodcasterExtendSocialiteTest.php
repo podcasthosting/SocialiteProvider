@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace podcasthosting\podcaster\socialiteprovider\Tests;
+namespace PodcastHosting\Podcaster\SocialiteProvider\Tests;
 
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
-use podcasthosting\podcaster\socialiteprovider\PodcasterExtendSocialite;
-use podcasthosting\podcaster\socialiteprovider\Provider;
+use PodcastHosting\Podcaster\SocialiteProvider\PodcasterExtendSocialite;
+use PodcastHosting\Podcaster\SocialiteProvider\Provider;
 use SocialiteProviders\Manager\SocialiteWasCalled;
 
 class PodcasterExtendSocialiteTest extends TestCase
